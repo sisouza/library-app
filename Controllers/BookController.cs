@@ -20,10 +20,11 @@ namespace library_app.Controllers
 
         //create a new book
         [HttpPost]
-        public void CreateBook([FromBody] Book book)
+        public  IActionResult CreateBook([FromBody] Book book)
         {
             book.Id = id++;
             books.Add(book);
+            return CreatedAtAction(nameof(getById), new {Id = book.Id}, book);
 
         }
 
