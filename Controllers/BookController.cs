@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using library_app.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,11 @@ namespace library_app.Controllers
 
 
         //create a new book
+        [HttpPost]
         public void CreateBook(Book book)
         {
             books.Add(book);
+            Console.WriteLine(book.Title);
         }
     }
 }
