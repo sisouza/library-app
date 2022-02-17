@@ -27,9 +27,20 @@ namespace library_app.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Book> listBooks()
+        public IEnumerable<Book> getAll()
         {
             return books;
+        }
+
+        [HttpGet("{id}")]
+        public Book getById(int id)
+        {
+            foreach(Book book in books){
+                if(book.Id == id){
+                     return book;
+                }
+            }
+            return null;
         }
     }
 }
