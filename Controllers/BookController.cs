@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using library_app.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,12 +36,7 @@ namespace library_app.Controllers
         [HttpGet("{id}")]
         public Book getById(int id)
         {
-            foreach(Book book in books){
-                if(book.Id == id){
-                     return book;
-                }
-            }
-            return null;
+            books.FirstOrDefault(book => book.Id == id);
         }
     }
 }
