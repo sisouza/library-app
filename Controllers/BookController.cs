@@ -17,10 +17,16 @@ namespace library_app.Controllers
 
         //create a new book
         [HttpPost]
-        public void CreateBook(Book book)
+        public void CreateBook([FromBody]Book book)
         {
             books.Add(book);
             Console.WriteLine(book.Title);
+        }
+
+        [HttpGet]
+        public IEnumerable<Book> listBooks()
+        {
+            return books;
         }
     }
 }
