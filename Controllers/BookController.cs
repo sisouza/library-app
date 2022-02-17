@@ -1,4 +1,6 @@
 
+using System.Collections.Generic;
+using library_app.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace library_app.Controllers
@@ -8,7 +10,7 @@ namespace library_app.Controllers
     public class BookController : ControllerBase
     {
         
-        //set book list
+        //set book list using Book Model
         private static List<Book> books = new List<Book>();
 
 
