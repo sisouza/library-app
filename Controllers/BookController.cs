@@ -28,15 +28,19 @@ namespace library_app.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Book> getAll()
+        public IActionResult getAll()
         {
-            return books;
+            return Ok(books);
         }
 
         [HttpGet("{id}")]
-        public Book getById(int id)
-        {
-            books.FirstOrDefault(book => book.Id == id);
+        public IActionResult  getById(int id) {
+             Book book = books.FirstOrDefault(book => book.Id == id);
+
+            if(book != null){
+                return Ok(book);
+            }
+            return NotFound();
         }
     }
 }
