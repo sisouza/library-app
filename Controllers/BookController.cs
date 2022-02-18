@@ -67,5 +67,18 @@ namespace library_app.Controllers
             return NoContent();
 
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult deleteBook(int id)
+        {
+            Book book = _context.Books.FirstOrDefault(book => book.Id == id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            _context.Remove(book);
+            _context.SaveChanges();
+            return NoContent();
+        }
     }
 }
