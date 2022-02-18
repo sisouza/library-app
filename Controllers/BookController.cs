@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using library_app.Data;
 using library_app.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,8 @@ namespace library_app.Controllers
     [Route("[controller]")]
     public class BookController : ControllerBase
     {
+
+        private BookDbContext _context;
 
         //set book list using Book Model
         private static List<Book> books = new List<Book>();
@@ -22,8 +25,8 @@ namespace library_app.Controllers
         [HttpPost]
         public  IActionResult CreateBook([FromBody] Book book)
         {
-            book.Id = id++;
-            books.Add(book);
+          
+           _context.Books.Add(book);
             return CreatedAtAction(nameof(getById), new {Id = book.Id}, book);
 
         }
@@ -31,12 +34,12 @@ namespace library_app.Controllers
         [HttpGet]
         public IActionResult getAll()
         {
-            return Ok(books);
+            return Ok(_context.Books);
         }
 
         [HttpGet("{id}")]
         public IActionResult  getById(int id) {
-             Book book = books.FirstOrDefault(book => book.Id == id);
+             Book book = _context.Books.FirstOrDefault(book => book.Id == id);
 
             if(book != null){
                 return Ok(book);
