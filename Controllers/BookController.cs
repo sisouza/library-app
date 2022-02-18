@@ -27,14 +27,15 @@ namespace library_app.Controllers
         {
           
            _context.Books.Add(book);
+           _context.SaveChanges();
             return CreatedAtAction(nameof(getById), new {Id = book.Id}, book);
 
         }
 
         [HttpGet]
-        public IActionResult getAll()
+        public IEnumerable<Book> getAll()
         {
-            return Ok(_context.Books);
+            return _context.Books;
         }
 
         [HttpGet("{id}")]
