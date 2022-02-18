@@ -6,6 +6,8 @@ namespace library_app.Models
 {
     public class Book
     {
+        [Key]
+        [Required]
         public int Id { get; set; }
         [Required(ErrorMessage = "Title can not be empty")]
         public string Title { get; set; }
