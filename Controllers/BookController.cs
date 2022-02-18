@@ -23,12 +23,12 @@ namespace library_app.Controllers
 
         //create a new book
         [HttpPost]
-        public  IActionResult CreateBook([FromBody] Book book)
+        public IActionResult CreateBook([FromBody] Book book)
         {
-          
-           _context.Books.Add(book);
-           _context.SaveChanges();
-            return CreatedAtAction(nameof(getById), new {Id = book.Id}, book);
+
+            _context.Books.Add(book);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(getById), new { Id = book.Id }, book);
 
         }
 
@@ -39,13 +39,33 @@ namespace library_app.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult  getById(int id) {
-             Book book = _context.Books.FirstOrDefault(book => book.Id == id);
+        public IActionResult getById(int id)
+        {
+            Book book = _context.Books.FirstOrDefault(book => book.Id == id);
 
-            if(book != null){
+            if (book != null)
+            {
                 return Ok(book);
             }
             return NotFound();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult updateBook(int id, [FromBody] Book newBook)
+        {
+            Book book = _context.Books.FirstOrDefault(book => book.Id == id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            book.Title = newBook.Title;
+            book.Author = newBook.Author;
+            book.Genre = newBook.Genre;
+            book.Year = newBook.Year;
+
+            _context.SaveChanges();
+            return NoContent();
+
         }
     }
 }
