@@ -2,9 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using library_app.Data;
+using library_app.Data.Dtos;
 using library_app.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace library_app.Controllers
 {
@@ -12,19 +15,23 @@ namespace library_app.Controllers
     [Route("[controller]")]
     public class BookController : ControllerBase
     {
-
         private BookDbContext _context;
+        private IMapper _mapper;
 
-        //set book list using Book Model
-        private static List<Book> books = new List<Book>();
-        //id
-        private static int id = 1;
+        public BookController(BookDbContext context, IMapper mapper)
+        {
+
+            _context = context;
+            _mapper = mapper;
+        }
 
 
         //create a new book
         [HttpPost]
-        public IActionResult CreateBook([FromBody] Book book)
+        public IActionResult CreateBook([FromBody] CreateBookDto bookDto)
         {
+
+            Book book = _mapper.Map<Book>(bookDto);
 
             _context.Books.Add(book);
             _context.SaveChanges();
@@ -38,6 +45,7 @@ namespace library_app.Controllers
             return _context.Books;
         }
 
+
         [HttpGet("{id}")]
         public IActionResult getById(int id)
         {
@@ -45,23 +53,22 @@ namespace library_app.Controllers
 
             if (book != null)
             {
-                return Ok(book);
+                ReadBookDto readBookDto = _mapper.Map<ReadBookDto>(book);
+
+                return Ok(readBookDto);
             }
             return NotFound();
         }
 
         [HttpPut("{id}")]
-        public IActionResult updateBook(int id, [FromBody] Book newBook)
+        public IActionResult updateBook(int id, [FromBody] UpdateBookDto bookDto)
         {
             Book book = _context.Books.FirstOrDefault(book => book.Id == id);
             if (book == null)
             {
                 return NotFound();
             }
-            book.Title = newBook.Title;
-            book.Author = newBook.Author;
-            book.Genre = newBook.Genre;
-            book.Year = newBook.Year;
+            _mapper.Map(bookDto, book);
 
             _context.SaveChanges();
             return NoContent();
@@ -82,3 +89,4 @@ namespace library_app.Controllers
         }
     }
 }
+
