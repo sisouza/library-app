@@ -1,6 +1,10 @@
 
 
 using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using library_app.Models;
 
 namespace library_app.Models
 {
@@ -12,7 +16,7 @@ namespace library_app.Models
         [Required(ErrorMessage = "Title can not be empty")]
         public string Title { get; set; }
         [Required(ErrorMessage = "Author can not be empty")]
-        public string Author { get; set; }
+        public Author Author { get; set; }
         [Required(ErrorMessage = "Year can not be empty")]
         public int Year { get; set; }
         [Required(ErrorMessage = " can not be empty")]
