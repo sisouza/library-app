@@ -22,6 +22,8 @@ namespace library_app.Models
         [Required(ErrorMessage = " can not be empty")]
         public string Genre { get; set; }
 
+        public int AuthorId { get; set; }
+
 
     }
 }
