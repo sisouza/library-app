@@ -11,6 +11,12 @@ namespace library_app.Data
 
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Book>()
+                .HasOne(book => book.Author);
+        }
+
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
     }
