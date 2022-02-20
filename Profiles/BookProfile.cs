@@ -1,12 +1,15 @@
 using AutoMapper;
 using library_app.Models;
 
-public class BookProfile : Profile
+namespace library_app.Profiles
+{
+    public class BookProfile : Profile
     {
-        public BookProfile()
+        public class BookProfile()
         {
             CreateMap<CreateBookDto, Book>();
-            CreateMap<Book, ReadFilmeDto>();
-            CreateMap<UpdateBookDto,  Book>();
+            CreateMap<Book, ReadBookDto>();
+            CreateMap<UpdateBookDto, Book>();
         }
-    }
+}
+}
