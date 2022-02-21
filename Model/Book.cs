@@ -16,7 +16,7 @@ namespace library_app.Models
         [Required(ErrorMessage = "Title can not be empty")]
         public string Title { get; set; }
         [Required(ErrorMessage = "Author can not be empty")]
-        public Author Author { get; set; }
+        public virtual Author Author { get; set; }
         [Required(ErrorMessage = "Year can not be empty")]
         public int Year { get; set; }
         [Required(ErrorMessage = " can not be empty")]
