@@ -14,7 +14,9 @@ namespace library_app.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Book>()
-                .HasOne(book => book.Author);
+                .HasOne(book => book.Author)
+                .WithMany(author => author.Books)
+                .HasForeignKey(book => book.AuthorId);
         }
 
         public DbSet<Book> Books { get; set; }
