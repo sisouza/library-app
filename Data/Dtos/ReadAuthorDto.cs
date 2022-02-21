@@ -14,6 +14,7 @@ namespace library_app.Data.Dtos
         public int Id { get; set; }
         [Required(ErrorMessage = "name can not be empty")]
         public string Name { get; set; }
+        public object Books { get; set; }
 
     }
 }

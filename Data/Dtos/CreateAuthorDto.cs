@@ -9,10 +9,6 @@ namespace library_app.Data.Dtos
 {
     public class CreateAuthorDto
     {
-        [Key]
-        [Required]
-        public int Id { get; set; }
-        [Required(ErrorMessage = "name can not be empty")]
         public string Name { get; set; }
 
     }
