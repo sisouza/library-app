@@ -16,8 +16,6 @@ namespace library_app.Data.Dtos
 
         public Author Author { get; set; }
 
-        public string Genre { get; set; }
-
         public int Year { get; set; }
     }
 }

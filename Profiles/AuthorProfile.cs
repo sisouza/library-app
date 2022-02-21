@@ -17,7 +17,7 @@ namespace library_app.Profiles
             CreateMap<Author, ReadAuthorDto>()
                 .ForMember(author => author.Books, opts => opts
                 .MapFrom(author => author.Books.Select
-                (b => new { b.Id, b.Title, b.Year, b.Genre })));
+                (b => new { b.Id, b.Title, b.Year})));
             CreateMap<UpdateAuthorDto, Author>();
         }
     }

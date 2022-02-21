@@ -20,9 +20,10 @@ namespace library_app.Models
         [Required(ErrorMessage = "Year can not be empty")]
         public int Year { get; set; }
         [Required(ErrorMessage = " can not be empty")]
-        public string Genre { get; set; }
 
         public int AuthorId { get; set; }
+        [JsonIgnore]
+        public virtual List<Collection> Collections { get; set; }
 
 
     }
