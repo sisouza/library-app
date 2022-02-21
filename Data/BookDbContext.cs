@@ -16,7 +16,8 @@ namespace library_app.Data
             builder.Entity<Book>()
                 .HasOne(book => book.Author)
                 .WithMany(author => author.Books)
-                .HasForeignKey(book => book.AuthorId);
+                .HasForeignKey(book => book.AuthorId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         public DbSet<Book> Books { get; set; }
