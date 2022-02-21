@@ -45,6 +45,32 @@ namespace library_app.Controllers
             return _context.Books;
         }
 
+        [HttpGet]
+        public IActionResult getByReleaseYear([FromQuery] int? year = null)
+        {
+            List<Book> books;
+
+            if (year == null)
+            {
+
+                books = _context.Books.ToList();
+
+            }
+            else
+            {
+                books = _context
+                .Books.Where(book => book.Year <= year).ToList();
+            }
+
+
+            if (books != null)
+            {
+                List<ReadBookDto> readDto = _mapper.Map<List<ReadBookDto>>(books);
+                return Ok(readDto);
+            }
+            return NotFound();
+        }
+
 
         [HttpGet("{id}")]
         public IActionResult getById(int id)
