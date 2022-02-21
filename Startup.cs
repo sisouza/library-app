@@ -1,17 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using library_app.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace library_app
@@ -30,9 +24,7 @@ namespace library_app
         {
 
             //setting db
-            services.AddDbContext<BookDbContext>(opts => opts.UseMySQL(Configuration.GetConnectionString("LibraryDbConnection")));
-
-
+            services.AddDbContext<BookDbContext>(opts => opts.UseLazyLoadingProxies().UseMySQL(Configuration.GetConnectionString("LibraryDbConnection")));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
