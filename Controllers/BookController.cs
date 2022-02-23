@@ -8,6 +8,7 @@ using library_app.Data.Dtos;
 using library_app.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using library_app.Services;
 
 namespace library_app.Controllers
 {
@@ -15,14 +16,13 @@ namespace library_app.Controllers
     [Route("[controller]")]
     public class BookController : ControllerBase
     {
-        private BookDbContext _context;
-        private IMapper _mapper;
 
-        public BookController(BookDbContext context, IMapper mapper)
+        private BookService _bookService;
+
+        public BookController(BookService bookService)
         {
 
-            _context = context;
-            _mapper = mapper;
+            _bookService = bookService;
         }
 
 
@@ -31,43 +31,24 @@ namespace library_app.Controllers
         public IActionResult CreateBook([FromBody] CreateBookDto bookDto)
         {
 
-            Book book = _mapper.Map<Book>(bookDto);
-
-            _context.Books.Add(book);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(getById), new { Id = book.Id }, book);
+            ReadBookDto readBookDto = _bookService.Create(bookDto);
+            return CreatedAtAction(nameof(getById), new { Id = readBookDto.Id }, readBookDto);
 
         }
 
         [HttpGet]
-        public IEnumerable<Book> getAll()
+        public ActionResult<Book> getAll()
         {
-            return _context.Books;
+            List<ReadBookDto> readBookDto = _bookService.GetAll();
+            if (readBookDto != null) return Ok(readBookDto);
+            return NotFound();
         }
 
         [HttpGet]
         public IActionResult getByReleaseYear([FromQuery] int? year = null)
         {
-            List<Book> books;
-
-            if (year == null)
-            {
-
-                books = _context.Books.ToList();
-
-            }
-            else
-            {
-                books = _context
-                .Books.Where(book => book.Year <= year).ToList();
-            }
-
-
-            if (books != null)
-            {
-                List<ReadBookDto> readDto = _mapper.Map<List<ReadBookDto>>(books);
-                return Ok(readDto);
-            }
+            List<ReadBookDto> readBookDto = _bookService.GetByYear(year);
+            if (readBookDto != null) return Ok(readBookDto);
             return NotFound();
         }
 
@@ -75,28 +56,16 @@ namespace library_app.Controllers
         [HttpGet("{id}")]
         public IActionResult getById(int id)
         {
-            Book book = _context.Books.FirstOrDefault(book => book.Id == id);
-
-            if (book != null)
-            {
-                ReadBookDto readBookDto = _mapper.Map<ReadBookDto>(book);
-
-                return Ok(readBookDto);
-            }
+            ReadBookDto readBookDto = _bookService.GetById(id);
+            if (readBookDto != null) return Ok(readBookDto);
             return NotFound();
         }
 
         [HttpPut("{id}")]
         public IActionResult updateBook(int id, [FromBody] UpdateBookDto bookDto)
         {
-            Book book = _context.Books.FirstOrDefault(book => book.Id == id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-            _mapper.Map(bookDto, book);
-
-            _context.SaveChanges();
+            Result resul = _bookService.UpdateBook(id, bookDto);
+            if (result.IsFailed) return NotFound();
             return NoContent();
 
         }
@@ -104,13 +73,8 @@ namespace library_app.Controllers
         [HttpDelete("{id}")]
         public IActionResult deleteBook(int id)
         {
-            Book book = _context.Books.FirstOrDefault(book => book.Id == id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-            _context.Remove(book);
-            _context.SaveChanges();
+           Result result = _bookService.DeleteBook(id);
+            if (result.IsFailed) return NotFound();
             return NoContent();
         }
     }
