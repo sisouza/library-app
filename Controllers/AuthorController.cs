@@ -8,6 +8,8 @@ using library_app.Data.Dtos;
 using library_app.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using library_app.Services;
+using FluentResults;
 
 namespace library_app.Controllers
 {
@@ -15,62 +17,45 @@ namespace library_app.Controllers
     [Route("[controller]")]
     public class AuthorController : ControllerBase
     {
-        private BookDbContext _context;
-        private IMapper _mapper;
-
-        public AuthorController(BookDbContext context, IMapper mapper)
+        private AuthorService _authorService;
+        public AuthorController(AuthorService authorService)
         {
-
-            _context = context;
-            _mapper = mapper;
+            _authorService = authorService;
         }
 
 
-        //create a new book
         [HttpPost]
         public IActionResult CreateAuthor([FromBody] CreateAuthorDto authorDto)
         {
 
-            Author author = _mapper.Map<Author>(authorDto);
-
-            _context.Authors.Add(author);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(getById), new { Id = author.Id }, author);
+            ReadAuthorDto readAuthorDto = _authorService.Create(authorDto);
+            return CreatedAtAction(nameof(getById), new { Id = readAuthorDto.Id }, readAuthorDto);
 
         }
 
         [HttpGet]
-        public IEnumerable<Author> getAll()
+        public ActionResult<Author> getAll()
         {
-            return _context.Authors;
+            List<ReadAuthorDto> readAuthorDto = _authorService.GetAll();
+            if (readAuthorDto != null) return Ok(readAuthorDto);
+            return NotFound();
         }
 
 
         [HttpGet("{id}")]
         public IActionResult getById(int id)
         {
-            Author author = _context.Authors.FirstOrDefault(author => author.Id == id);
+            ReadAuthorDto readAuthorDto = _authorService.GetById(id);
 
-            if (author != null)
-            {
-                ReadAuthorDto readAuthorDto = _mapper.Map<ReadAuthorDto>(author);
-
-                return Ok(readAuthorDto);
-            }
+            if (readAuthorDto != null) return Ok(readAuthorDto);
             return NotFound();
         }
 
         [HttpPut("{id}")]
         public IActionResult updateAuthor(int id, [FromBody] UpdateAuthorDto authorDto)
         {
-            Author author = _context.Authors.FirstOrDefault(author => author.Id == id);
-            if (author == null)
-            {
-                return NotFound();
-            }
-            _mapper.Map(authorDto, author);
-
-            _context.SaveChanges();
+            Result result = _authorService.UpdateAuthor(id, authorDto);
+            if (result.IsFailed) return NotFound();
             return NoContent();
 
         }
@@ -78,13 +63,8 @@ namespace library_app.Controllers
         [HttpDelete("{id}")]
         public IActionResult deleteAuthor(int id)
         {
-            Author author = _context.Authors.FirstOrDefault(author => author.Id == id);
-            if (author == null)
-            {
-                return NotFound();
-            }
-            _context.Remove(author);
-            _context.SaveChanges();
+            Result result = _authorService.DeleteAuthor(id);
+            if (result.IsFailed) return NotFound();
             return NoContent();
         }
     }
