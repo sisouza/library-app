@@ -1,5 +1,6 @@
 using System;
 using library_app.Data;
+using library_app.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace library_app
 
             //setting db
             services.AddDbContext<BookDbContext>(opts => opts.UseLazyLoadingProxies().UseMySQL(Configuration.GetConnectionString("LibraryDbConnection")));
+            services.AddScoped<BookService, BookService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
