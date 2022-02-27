@@ -9,6 +9,7 @@ using library_app.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using library_app.Services;
+using FluentResults;
 
 namespace library_app.Controllers
 {
@@ -64,7 +65,7 @@ namespace library_app.Controllers
         [HttpPut("{id}")]
         public IActionResult updateBook(int id, [FromBody] UpdateBookDto bookDto)
         {
-            Result resul = _bookService.UpdateBook(id, bookDto);
+            Result result = _bookService.UpdateBook(id, bookDto);
             if (result.IsFailed) return NotFound();
             return NoContent();
 

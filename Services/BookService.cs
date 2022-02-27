@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using FluentResults;
 using library_app.Data;
 using library_app.Data.Dtos;
 using library_app.Models;
@@ -54,15 +55,14 @@ namespace library_app.Services
             return null;
         }
 
-        public ReadBookDto GetAll()
+        public List<ReadBookDto> GetAll()
+        
         {
-            Book books = _context.Books.All();
+            List<Book> books = _context.Books.ToList();
 
             if (books != null)
             {
-                ReadBookDto readBookDto = _mapper.Map<ReadBookDto>(books);
-
-                return readBookDto;
+                return _mapper.Map<List<ReadBookDto>>(books);
             }
             return null;
         }
