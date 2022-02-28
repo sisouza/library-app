@@ -1,13 +1,6 @@
-
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
-using library_app.Data;
 using library_app.Data.Dtos;
-using library_app.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using library_app.Services;
 using FluentResults;
 
@@ -38,7 +31,7 @@ namespace library_app.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Book> getAll()
+        public IActionResult getAll()
         {
             List<ReadBookDto> readBookDto = _bookService.GetAll();
             if (readBookDto != null) return Ok(readBookDto);
