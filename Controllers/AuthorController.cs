@@ -34,7 +34,7 @@ namespace library_app.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Author> getAll()
+        public IActionResult getAll()
         {
             List<ReadAuthorDto> readAuthorDto = _authorService.GetAll();
             if (readAuthorDto != null) return Ok(readAuthorDto);
