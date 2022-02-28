@@ -55,6 +55,18 @@ namespace library_app.Services
             return null;
         }
 
+        public Result Update(int id, UpdateGenreDto genreDto)
+        {
+            Genre genre = _context.Genres.FirstOrDefault(genre  => genre .Id == id);
+            if (genre  == null)
+            {
+                return Result.Fail("Genre not found");
+            }
+            _mapper.Map(genreDto, genre);
+            _context.SaveChanges();
+            return Result.Ok();
+        }
+
 
         public Result DeleteGenre(int id)
         {

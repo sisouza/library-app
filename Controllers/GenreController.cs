@@ -1,13 +1,8 @@
-
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
-using library_app.Data;
 using library_app.Data.Dtos;
-using library_app.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using library_app.Services;
+using FluentResults;
 
 namespace library_app.Controllers
 {
@@ -15,14 +10,12 @@ namespace library_app.Controllers
     [Route("[controller]")]
     public class GenreController : ControllerBase
     {
-        private BookDbContext _context;
-        private IMapper _mapper;
+        private GenreService _genreService;
 
-        public GenreController(BookDbContext context, IMapper mapper)
+        public GenreController(GenreService genreService)
         {
 
-            _context = context;
-            _mapper = mapper;
+            _genreService = genreService;
         }
 
 
@@ -30,49 +23,36 @@ namespace library_app.Controllers
         public IActionResult CreateGenre([FromBody] CreateGenreDto genreDto)
         {
 
-            Genre genre = _mapper.Map<Genre>(genreDto);
-
-            _context.Genres.Add(genre);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(getById), new { Id = genre.Id }, genre);
+            ReadGenreDto readGenreDto = _genreService.Create(genreDto);
+            return CreatedAtAction(nameof(getById), new { Id = readGenreDto.Id }, readGenreDto);
 
         }
 
         [HttpGet]
-        public IEnumerable<Genre> getAll()
+        public IActionResult getAll()
         {
-            return _context.Genres;
+            List<ReadGenreDto> readGenreDto = _genreService.GetAll();
+            if (readGenreDto != null) return Ok(readGenreDto);
+            return NotFound();
         }
-
 
 
         [HttpGet("{id}")]
         public IActionResult getById(int id)
         {
-            Genre genre = _context.Genres.FirstOrDefault(genre => genre.Id == id);
-
-            if (genre != null)
-            {
-                ReadGenreDto readGenreDto = _mapper.Map<ReadGenreDto>(genre);
-
-                return Ok(readGenreDto);
-            }
+            ReadGenreDto readGenreDto = _genreService.GetById(id);
+            if (readGenreDto != null) return Ok(readGenreDto);
             return NotFound();
         }
 
-
-        [HttpDelete("{id}")]
-        public IActionResult deleteGenre(int id)
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] UpdateGenreDto genreDto)
         {
-            Genre genre = _context.Genres.FirstOrDefault(genre => genre.Id == id);
-            if (genre == null)
-            {
-                return NotFound();
-            }
-            _context.Remove(genre);
-            _context.SaveChanges();
+            Result result = _genreService.Update(id, genreDto);
+            if (result.IsFailed) return NotFound();
             return NoContent();
         }
+
     }
 }
 
