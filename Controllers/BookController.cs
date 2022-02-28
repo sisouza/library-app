@@ -38,7 +38,7 @@ namespace library_app.Controllers
             return NotFound();
         }
 
-        [HttpGet]
+        [HttpGet("{year}")]
         public IActionResult getByReleaseYear([FromQuery] int? year = null)
         {
             List<ReadBookDto> readBookDto = _bookService.GetByYear(year);
@@ -67,7 +67,7 @@ namespace library_app.Controllers
         [HttpDelete("{id}")]
         public IActionResult deleteBook(int id)
         {
-           Result result = _bookService.DeleteBook(id);
+            Result result = _bookService.DeleteBook(id);
             if (result.IsFailed) return NotFound();
             return NoContent();
         }
