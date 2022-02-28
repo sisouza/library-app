@@ -8,6 +8,7 @@ using library_app.Data.Dtos;
 using library_app.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using library_app.Services;
 
 namespace library_app.Controllers
 {
@@ -15,14 +16,12 @@ namespace library_app.Controllers
     [Route("[controller]")]
     public class CollectionController : ControllerBase
     {
-        private BookDbContext _context;
-        private IMapper _mapper;
+        private CollectionService _collectionService;
 
-        public CollectionController(BookDbContext context, IMapper mapper)
+        public CollectionController(CollectionService collectionService)
         {
 
-            _context = context;
-            _mapper = mapper;
+            _collectionService = collectionService;
         }
 
 
@@ -31,32 +30,24 @@ namespace library_app.Controllers
         public IActionResult CreateCollection([FromBody] CreateCollectionDto collectionDto)
         {
 
-            Collection collection = _mapper.Map<Collection>(collectionDto);
-
-            _context.Collections.Add(collection);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(getById), new { Id = collection.Id }, collection);
-
+            ReadCollectionDto readCollectionDto = _collectionService.Create(collectionDto);
+            return CreatedAtAction(nameof(getById), new { Id = readCollectionDto.Id }, readCollectionDto);
         }
 
         [HttpGet]
-        public IEnumerable<Collection> getAll()
+        public IActionResult getAll()
         {
-            return _context.Collections;
+            List<ReadCollectionDto> readCollectionDto = _collectionService.GetAll();
+            if (readCollectionDto != null) return Ok(readCollectionDto);
+            return NotFound();
         }
 
 
         [HttpGet("{id}")]
         public IActionResult getById(int id)
         {
-            Collection collection = _context.Collections.FirstOrDefault(collection => collection.Id == id);
-
-            if (collection != null)
-            {
-                ReadCollectionDto readCollectionDto = _mapper.Map<ReadCollectionDto>(collection);
-
-                return Ok(readCollectionDto);
-            }
+            ReadCollectionDto readCollectionDto = _collectionService.GetById(id);
+            if (readCollectionDto != null) return Ok(readCollectionDto);
             return NotFound();
         }
 
