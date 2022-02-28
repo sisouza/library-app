@@ -1,3 +1,4 @@
+using library_app.UsersApi.Data.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace library_app.UsersApi.Controllers
