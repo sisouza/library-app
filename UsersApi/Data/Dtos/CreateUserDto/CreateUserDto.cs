@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using library_app.Models;
+using UsersApi.Models;
 
 namespace library_app.UsersApi.Data.Dtos
 {
