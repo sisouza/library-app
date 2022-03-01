@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using UsersApi.Data;
 using AutoMapper;
-
+using UsersApi.Services;
 
 namespace UsersApi
 {
@@ -28,7 +28,11 @@ namespace UsersApi
             services.AddDbContext<UserDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("UserDbConnection")));
             //set Identity
             services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
-            //store data used for identity
+            /*
+            * Identity Result will be an operation performed from User Manager
+            *(which will asynchronously create the user[UserIdentity]) that is
+            *mapped and has a password came intrequest [crateUserDto.Password]
+            */
                 .AddEntityFrameworkStores<UserDbContext>();
 
             services.AddSwaggerGen(c =>
@@ -36,6 +40,7 @@ namespace UsersApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "UsuariosApi", Version = "v1" });
             });
             services.AddScoped<UserService, UserService>();
+            services.AddScoped<LoginService, LoginService>();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
