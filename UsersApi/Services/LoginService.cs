@@ -38,7 +38,7 @@ namespace UsersApi.Services
                 //token that will be send to LoginController and user
                 Token token = _tokenService.CreateToken(identityUser);
 
-                return Result.Ok();
+                return Result.Ok().WithSuccess(token.Value);
             }
             return Result.Fail("Login Not authorized");
         }

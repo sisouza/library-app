@@ -22,8 +22,9 @@ namespace UsersApi.Controllers
         public IActionResult UserLogin(LoginRequest request)
         {
             Result result = _loginService.UserLogin(request);
-            if (result.IsFailed) return Unauthorized();
-            return Ok();
+            if (result.IsFailed) return Unauthorized(result.Errors);
+            //if everything is okay return token.value came from service
+            return Ok(result.Successes);
         }
     }
 }
