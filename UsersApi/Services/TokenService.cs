@@ -37,6 +37,7 @@ namespace UsersApi.Services
 
             //convert token into a string to be stored
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            return new Token(tokenString);
         }
     }
 
