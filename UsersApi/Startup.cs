@@ -1,4 +1,5 @@
 using System;
+using AutoMapper;
 using AutoMapper.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using UsersApi.Data;
-using AutoMapper;
 using UsersApi.Services;
 
 namespace UsersApi
@@ -25,7 +25,9 @@ namespace UsersApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<UserDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("UserDbConnection")));
+            services.AddDbContext<UserDbContext>(options =>
+                options.UseMySQL(Configuration.GetConnectionString("UsersDbConnection"))
+                );
             //set Identity
             services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
             /*
@@ -39,10 +41,13 @@ namespace UsersApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "UsuariosApi", Version = "v1" });
             });
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<UserService, UserService>();
             services.AddScoped<LoginService, LoginService>();
+            services.AddScoped<TokenService, TokenService>();
             services.AddControllers();
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
         }
 
