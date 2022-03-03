@@ -11,11 +11,13 @@ public class UserService
 {
     private IMapper _mapper;
     private UserManager<IdentityUser<int>> _userManager;
+    private EmailService _emailService;
 
-    public UserService(IMapper mapper, UserManager<IdentityUser<int>> userManager)
+    public UserService(IMapper mapper, UserManager<IdentityUser<int>> userManager, EmailService emailService)
     {
         _mapper = mapper;
         _userManager = userManager;
+        _emailService = emailService;
     }
 
     public Result RegisterUser(CreateUserDto createDto)
@@ -28,7 +30,9 @@ public class UserService
         {
             //generates account confirmation code
             var code = _userManager.GenerateEmailConfirmationTokenAsync(userIdentity).Result;
-            return Result.Ok().WithSuccess(code);
+            
+            _emailService.SendEmail(new[] { userIdentity.Email }, "Activation Link", userIdentity.Id, code);
+            return Result.Ok().WithSuccess(code).WithSuccess(userIdentity.Id.ToString());;
         }
         return Result.Fail("An error occur while registering User");
 
