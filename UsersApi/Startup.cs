@@ -29,11 +29,14 @@ namespace UsersApi
                 options.UseMySQL(Configuration.GetConnectionString("UsersDbConnection"))
                 );
             //set Identity
-            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
+            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
+
+                opt => opt.SignIn.RequireConfirmedEmail = true
+            )
             /*
             * Identity Result will be an operation performed from User Manager
-            *(which will asynchronously create the user[UserIdentity]) that is
-            *mapped and has a password came intrequest [crateUserDto.Password]
+            *(which rwill asynchronously create the user[UserIdentity]) that is
+            *mapped and has a password came in request [crateUserDto.Password]
             */
                 .AddEntityFrameworkStores<UserDbContext>();
 
