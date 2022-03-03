@@ -1,8 +1,10 @@
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentResults;
 using library_app.UsersApi.Data.Dtos;
 using Microsoft.AspNetCore.Identity;
+using UsersApi.Data.Requests;
 using UsersApi.Models;
 
 public class UserService
@@ -30,5 +32,23 @@ public class UserService
         }
         return Result.Fail("An error occur while registering User");
 
+    }
+
+    //user account activation
+    public Result ActiveAccount(ActiveAccountRequest request)
+    {
+
+        var identityUser = _userManager
+        .Users
+        //checks if user id request equals id found in database    
+        .FirstOrDefault(u => u.Id == request.UserId);
+
+        var identityResult = _userManager.ConfirmEmailAsync(identityUser, request.ActivationCode).Result;
+
+        if (identityResult.Succeeded)
+        {
+            return Result.Ok();
+        }
+        return Result.Fail("An error occured during user account activation");
     }
 }
