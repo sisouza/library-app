@@ -20,6 +20,7 @@ namespace library_app.UsersApi.Controllers
         {
             Result result = _userService.RegisterUser(createUserDto);
             if (result.IsFailed) return StatusCode(500);
+            //return account activation code
             return Ok(result.Successes);
         }
     }
