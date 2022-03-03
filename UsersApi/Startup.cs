@@ -38,7 +38,8 @@ namespace UsersApi
             *(which rwill asynchronously create the user[UserIdentity]) that is
             *mapped and has a password came in request [crateUserDto.Password]
             */
-                .AddEntityFrameworkStores<UserDbContext>();
+                .AddEntityFrameworkStores<UserDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddSwaggerGen(c =>
             {
