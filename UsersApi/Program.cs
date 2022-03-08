@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using static System.Collections.Immutable.ImmutableArray<T>;
 
 namespace UsersApi
 {
@@ -21,6 +22,8 @@ namespace UsersApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+                .ConfigureAppConfiguration((context, builder)=>
+                    builder.AddUserSecrets<Program>());
     }
 }
