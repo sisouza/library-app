@@ -26,5 +26,12 @@ namespace UsersApi.Controllers
             //if everything is okay return token.value came from service
             return Ok(result.Successes);
         }
+
+        [HttpPost("/request-password")]
+        public IActionResult SendRequest(ResetPasswordRequest request){
+            Result result = _loginService.RequestUserResetPassword(request);
+            if(result.IsFailed) return Unauthorized(result.Errors);
+            return Ok(result.Successes);
+        }
     }
 }
