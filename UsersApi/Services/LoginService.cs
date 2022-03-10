@@ -42,5 +42,23 @@ namespace UsersApi.Services
             }
             return Result.Fail("Login Not authorized");
         }
+
+        public Result RequestUserResetPassword(ResetPasswordRequest request)
+        {
+            IdentityUser<int> identityUser = _singInManager
+                .UserManager
+                .Users
+                .FirstOrDefault(u => u.NormalizedEmail == request.Email.ToUpper());
+
+            if (identityUser != null)
+            {
+                string recoveryCode = _singInManager
+                 .UserManager.GeneratePasswordResetTokenAsync(identityUser).Result;
+                return Result.Ok().WithSuccess(recoveryCode);
+            }
+
+            return Result.Fail("Request Reset Password Failed");
+
+        }
     }
 }
