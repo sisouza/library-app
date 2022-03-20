@@ -45,10 +45,8 @@ namespace UsersApi.Services
 
         public Result RequestUserResetPassword(ResetPasswordRequest request)
         {
-            IdentityUser<int> identityUser = _singInManager
-                .UserManager
-                .Users
-                .FirstOrDefault(u => u.NormalizedEmail == request.Email.ToUpper());
+            //call find by email to check if email exists in app db
+            IdentityUser<int> identityUser = RecoverUserByEmail(request.Email);
 
             if (identityUser != null)
             {
@@ -63,11 +61,8 @@ namespace UsersApi.Services
 
         public Result ResetUserPassword(PasswordResetRequest request)
         {
-
-            IdentityUser<int> identityUser = _singInManager
-              .UserManager
-              .Users
-              .FirstOrDefault(u => u.NormalizedEmail == request.Email.ToUpper());
+            //call find by email to check if email exists in app db
+            IdentityUser<int> identityUser = RecoverUserByEmail(request.Email);
 
             IdentityResult result = _singInManager
                .UserManager.ResetPasswordAsync(identityUser, request.Token, request.Password)
@@ -77,6 +72,16 @@ namespace UsersApi.Services
                  .WithSuccess("Password redefined with success");
             return Result.Fail("An error occured during password redefinition");
 
+        }
+
+
+        //method to find user by email so we dont need to write the same code everytime and just call the method instead
+        private IdentityUser<int> RecoverUserByEmail(string email)
+        {
+            return _singInManager
+              .UserManager
+              .Users
+              .FirstOrDefault(u => u.NormalizedEmail == email.ToUpper());
         }
     }
 }
