@@ -36,7 +36,10 @@ namespace UsersApi.Services
                     .FirstOrDefault(user => user.NormalizedUserName == request.Username.ToUpper());
 
                 //token that will be send to LoginController and user
-                Token token = _tokenService.CreateToken(identityUser);
+                Token token = _tokenService.CreateToken(identityUser, _singInManager
+                
+                    //get current user(our identity user) role to manage access
+                    .UserManager.GetRolesAsync(identityUser).Result.FirstOrDefault());
 
                 return Result.Ok().WithSuccess(token.Value);
             }

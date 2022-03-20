@@ -12,14 +12,17 @@ namespace UsersApi.Services
 
     public class TokenService
     {
-        public Token CreateToken(IdentityUser<int> user)
+
+        //add role param cause user access will be manager through token (id, username, role) - token will also store role info 
+        public Token CreateToken(IdentityUser<int> user, string role)
         {
 
             //what user must have to generate a token
             Claim[] userRights = new Claim[]
             {
                 new Claim("username", user.UserName),
-                new Claim("id", user.Id.ToString())
+                new Claim("id", user.Id.ToString()),
+                new Claim(ClaimTypes.Role, role)
             };
 
             //generate a security key
