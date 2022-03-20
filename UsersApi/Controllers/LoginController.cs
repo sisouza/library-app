@@ -33,5 +33,12 @@ namespace UsersApi.Controllers
             if(result.IsFailed) return Unauthorized(result.Errors);
             return Ok(result.Successes);
         }
+
+        [HttpPost("/reset-password")]
+        public IActionResult ResetPassword(PasswordResetRequest request){
+            Result result = _loginService.ResetUserPassword(request);
+            if(result.IsFailed) return Unauthorized(result.Errors);
+            return Ok(result.Successes);
+        }
     }
 }

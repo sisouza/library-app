@@ -60,5 +60,23 @@ namespace UsersApi.Services
             return Result.Fail("Request Reset Password Failed");
 
         }
+
+        public Result ResetUserPassword(PasswordResetRequest request)
+        {
+
+            IdentityUser<int> identityUser = _singInManager
+              .UserManager
+              .Users
+              .FirstOrDefault(u => u.NormalizedEmail == request.Email.ToUpper());
+
+            IdentityResult result = _singInManager
+               .UserManager.ResetPasswordAsync(identityUser, request.Token, request.Password)
+               .Result;
+
+            if (result.Succeeded) return Result.Ok()
+                 .WithSuccess("Password redefined with success");
+            return Result.Fail("An error occured during password redefinition");
+
+        }
     }
 }
