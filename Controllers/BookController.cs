@@ -22,6 +22,7 @@ namespace library_app.Controllers
 
         //create a new book
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateBook([FromBody] CreateBookDto bookDto)
         {
 
