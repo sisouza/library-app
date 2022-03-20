@@ -12,12 +12,14 @@ public class UserService
     private IMapper _mapper;
     private UserManager<IdentityUser<int>> _userManager;
     private EmailService _emailService;
+    private RoleManager<IdentityRole<int>> _roleManager;
 
-    public UserService(IMapper mapper, UserManager<IdentityUser<int>> userManager, EmailService emailService)
+    public UserService(IMapper mapper, UserManager<IdentityUser<int>> userManager, EmailService emailService, RoleManager<IdentityRole<int>> roleManager)
     {
         _mapper = mapper;
         _userManager = userManager;
         _emailService = emailService;
+        _roleManager = roleManager;
     }
 
     public Result RegisterUser(CreateUserDto createDto)
@@ -26,6 +28,15 @@ public class UserService
         IdentityUser<int> userIdentity = _mapper.Map<IdentityUser<int>>(user);
         //user that was mapped has a password
         Task<IdentityResult> resultIdentity = _userManager.CreateAsync(userIdentity, createDto.Password);
+
+        //create a new role
+        var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("admin")).Result;
+
+        //Add role to user during create
+        var userRole = _userManager
+        .AddToRoleAsync(userIdentity, "admin").Result;
+
+
         if (resultIdentity.Result.Succeeded)
         {
             //generates account confirmation code
