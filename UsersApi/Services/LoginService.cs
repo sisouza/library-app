@@ -39,6 +39,7 @@ namespace UsersApi.Services
                 Token token = _tokenService.CreateToken(identityUser, _singInManager
                 
                     //get current user(our identity user) role to manage access
+                    //binding role to user
                     .UserManager.GetRolesAsync(identityUser).Result.FirstOrDefault());
 
                 return Result.Ok().WithSuccess(token.Value);
