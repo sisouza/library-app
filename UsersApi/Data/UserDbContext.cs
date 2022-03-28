@@ -2,14 +2,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace UsersApi.Data
 {
     public class UserDbContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
     {
-        public UserDbContext(DbContextOptions<UserDbContext> opt) : base(opt)
-        {
+        private IConfiguration _configuration;
 
+        public UserDbContext(DbContextOptions<UserDbContext> opt, IConfiguration configuration) : base(opt)
+        {
+            _configuration = configuration;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -31,7 +34,8 @@ namespace UsersApi.Data
             //generate admin password
             PasswordHasher<IdentityUser<int>> hasher = new PasswordHasher<IdentityUser<int>>();
 
-            admin.PasswordHash = hasher.HashPassword(admin, "Admin123!");
+            admin.PasswordHash = hasher.HashPassword(admin, _configuration.GetValue<string>("adminfo:password"));
+            //run secrets, gitbash: dotnet user-secrets set "adminfo:password" "Admin123!"
 
             //entity with admin data
             builder.Entity<IdentityUser<int>>().HasData(admin);
