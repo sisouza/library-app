@@ -42,16 +42,28 @@ namespace UsersApi.Data
 
             //create role
             builder.Entity<IdentityRole<int>>().HasData(
-                new IdentityRole<int> {
+                new IdentityRole<int>
+                {
                     Id = 99999,
                     Name = "admin",
                     NormalizedName = "ADMIN"
                 }
             );
 
+            //create use default role
+            builder.Entity<IdentityRole<int>>().HasData(
+                new IdentityRole<int>
+                {
+                    Id = 99998,
+                    Name = "regular",
+                    NormalizedName = "REGULAR"
+                }
+            );
+
             //bind between user and role
             builder.Entity<IdentityUserRole<int>>().HasData(
-                new IdentityUserRole<int> {
+                new IdentityUserRole<int>
+                {
                     RoleId = 99999,
                     UserId = 99999
                 }

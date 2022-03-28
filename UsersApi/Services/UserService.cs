@@ -28,6 +28,8 @@ public class UserService
         IdentityUser<int> userIdentity = _mapper.Map<IdentityUser<int>>(user);
         //user that was mapped has a password
         Task<IdentityResult> resultIdentity = _userManager.CreateAsync(userIdentity, createDto.Password);
+        //set default role during register
+        _userManager.AddToRoleAsync(userIdentity, "regular");
 
         //create a new role
         var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("admin")).Result;
