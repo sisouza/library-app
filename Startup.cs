@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 
 namespace library_app
 {
@@ -35,6 +38,30 @@ namespace library_app
 
             //set auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+               //set auth service in our app
+            services.AddAuthentication(auth =>{
+                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                //prove token authenticy
+                auth.DefaultChallengesScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+
+            //tell our application to use jwt concept over it
+            .AddJwtBearer(token => {
+                token.RequireHttpsMetadata = false;
+                token.SaveToken = true;
+                token.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    //how it will validate who generated token
+                    IssueSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fhkdafhaflkalkfklja")),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +78,7 @@ namespace library_app
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

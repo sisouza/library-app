@@ -3,10 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
 using Microsoft.Extensions.Configuration;
+using UsersApi.Models;
 
 namespace UsersApi.Data
 {
-    public class UserDbContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
+    public class UserDbContext : IdentityDbContext<CustomIdentityUser, IdentityRole<int>, int>
     {
         private IConfiguration _configuration;
 
@@ -20,7 +21,7 @@ namespace UsersApi.Data
             base.OnModelCreating(builder);
 
             //set default application admin user
-            IdentityUser<int> admin = new IdentityUser<int>
+            CustomIdentityUser admin = new CustomIdentityUser
             {
                 UserName = "admin",
                 NormalizedUserName = "ADMIN",
@@ -32,13 +33,13 @@ namespace UsersApi.Data
             };
 
             //generate admin password
-            PasswordHasher<IdentityUser<int>> hasher = new PasswordHasher<IdentityUser<int>>();
+            PasswordHasher<CustomIdentityUser> hasher = new PasswordHasher<CustomIdentityUser>();
 
             admin.PasswordHash = hasher.HashPassword(admin, _configuration.GetValue<string>("adminfo:password"));
             //run secrets, gitbash: dotnet user-secrets set "adminfo:password" "Admin123!"
 
             //entity with admin data
-            builder.Entity<IdentityUser<int>>().HasData(admin);
+            builder.Entity<CustomIdentityUser>().HasData(admin);
 
             //create role
             builder.Entity<IdentityRole<int>>().HasData(

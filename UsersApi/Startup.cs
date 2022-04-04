@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using UsersApi.Data;
+using UsersApi.Models;
 using UsersApi.Services;
 
 namespace UsersApi
@@ -29,10 +30,12 @@ namespace UsersApi
                 options.UseMySQL(Configuration.GetConnectionString("UsersDbConnection"))
                 );
             //set Identity
-            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
+            services.AddIdentity<CustomIdentityUser, IdentityRole<int>>(
 
-                opt => opt.SignIn.RequireConfirmedEmail = true
-            )
+                opt =>
+                {
+                    opt.SignIn.RequireConfirmedEmail = true;
+                })
             /*
             * Identity Result will be an operation performed from User Manager
             *(which rwill asynchronously create the user[UserIdentity]) that is
@@ -42,9 +45,9 @@ namespace UsersApi
                 .AddDefaultTokenProviders();
 
             services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "UsuariosApi", Version = "v1" });
-            });
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "UsuariosApi", Version = "v1" });
+                });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<UserService, UserService>();

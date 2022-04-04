@@ -6,15 +6,16 @@ using library_app.UsersApi.Data.Dtos;
 using Microsoft.AspNetCore.Identity;
 using UsersApi.Data.Requests;
 using UsersApi.Models;
+using UsersApi.Services;
 
 public class UserService
 {
     private IMapper _mapper;
-    private UserManager<IdentityUser<int>> _userManager;
+    private UserManager<CustomIdentityUser> _userManager;
     private EmailService _emailService;
     private RoleManager<IdentityRole<int>> _roleManager;
 
-    public UserService(IMapper mapper, UserManager<IdentityUser<int>> userManager, EmailService emailService, RoleManager<IdentityRole<int>> roleManager)
+    public UserService(IMapper mapper, UserManager<CustomIdentityUser> userManager, EmailService emailService, RoleManager<IdentityRole<int>> roleManager)
     {
         _mapper = mapper;
         _userManager = userManager;
@@ -25,7 +26,7 @@ public class UserService
     public Result RegisterUser(CreateUserDto createDto)
     {
         User user = _mapper.Map<User>(createDto);
-        IdentityUser<int> userIdentity = _mapper.Map<IdentityUser<int>>(user);
+        CustomIdentityUser userIdentity = _mapper.Map<CustomIdentityUser>(user);
         //user that was mapped has a password
         Task<IdentityResult> resultIdentity = _userManager.CreateAsync(userIdentity, createDto.Password);
         //set default role during register

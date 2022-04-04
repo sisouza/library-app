@@ -11,11 +11,11 @@ namespace UsersApi.Services
     public class LoginService
     {
         //login manager
-        private SignInManager<IdentityUser<int>> _singInManager;
+        private SignInManager<CustomIdentityUser> _singInManager;
         //import TokenService
         private TokenService _tokenService;
 
-        public LoginService(SignInManager<IdentityUser<int>> singInManager, TokenService tokenService)
+        public LoginService(SignInManager<CustomIdentityUser> singInManager, TokenService tokenService)
         {
             _singInManager = singInManager;
             _tokenService = tokenService;
@@ -50,7 +50,7 @@ namespace UsersApi.Services
         public Result RequestUserResetPassword(ResetPasswordRequest request)
         {
             //call find by email to check if email exists in app db
-            IdentityUser<int> identityUser = RecoverUserByEmail(request.Email);
+            CustomIdentityUser identityUser = RecoverUserByEmail(request.Email);
 
             if (identityUser != null)
             {
@@ -66,7 +66,7 @@ namespace UsersApi.Services
         public Result ResetUserPassword(PasswordResetRequest request)
         {
             //call find by email to check if email exists in app db
-            IdentityUser<int> identityUser = RecoverUserByEmail(request.Email);
+            CustomIdentityUser identityUser = RecoverUserByEmail(request.Email);
 
             IdentityResult result = _singInManager
                .UserManager.ResetPasswordAsync(identityUser, request.Token, request.Password)
@@ -80,7 +80,7 @@ namespace UsersApi.Services
 
 
         //method to find user by email so we dont need to write the same code everytime and just call the method instead
-        private IdentityUser<int> RecoverUserByEmail(string email)
+        private CustomIdentityUser RecoverUserByEmail(string email)
         {
             return _singInManager
               .UserManager

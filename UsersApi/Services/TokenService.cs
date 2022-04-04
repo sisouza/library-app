@@ -14,7 +14,7 @@ namespace UsersApi.Services
     {
 
         //add role param cause user access will be manager through token (id, username, role) - token will also store role info 
-        public Token CreateToken(IdentityUser<int> user, string role)
+        public Token CreateToken(CustomIdentityUser user, string role)
         {
 
             //what user must have to generate a token

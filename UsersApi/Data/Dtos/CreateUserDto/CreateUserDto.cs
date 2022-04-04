@@ -20,6 +20,9 @@ namespace library_app.UsersApi.Data.Dtos
         [Required]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
+        
+        [Required]
+        public DateTime BirthDate {get; set;}
 
 
     }
